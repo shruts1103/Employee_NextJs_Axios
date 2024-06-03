@@ -1,0 +1,193 @@
+
+
+
+
+
+'use client'
+import axios from "axios";
+import * as React from "react";
+import { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import TemporaryDrawer from "./components/drawer";
+
+function DummyData() {
+  const [employees, setEmployees] = useState([]);
+  const [myError, setError] = useState("");
+  const [editingId, setEditingId] = useState(null);
+  const [editValues, setEditValues] = useState({ name: '', username: '', email: '' });
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // Number of items to display per page
+
+
+
+  // GET
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setEmployees(response.data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+  // DELETE
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+      setEmployees(employees.filter((user) => user.id !== id));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  // ADD-POST
+  const handleAdding = async (values) => {
+    try {
+      const entry = await axios.post(
+        "https://jsonplaceholder.typicode.com/users",
+        {
+          name: values.name,
+          username: values.username,
+          email: values.email,
+        }
+      );
+      console.log(entry.data);
+      setEmployees([...employees, entry.data]);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  // EDIT-PUT
+  const handleEditing = async (id, values) => {
+    try {
+      const entry = await axios.put(
+        `https://jsonplaceholder.typicode.com/users/${id}`,
+        values
+      );
+      console.log(entry.data);
+      setEmployees(
+        employees.map((user) =>
+          user.id === id ? { ...user, ...entry.data } : user
+        )
+      );
+      setEditingId(null);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditValues({ ...editValues, [name]: value });
+  };
+
+  const startEditing = (user) => {
+    setEditingId(user.id);
+    setEditValues({ name: user.name, username: user.username, email: user.email });
+  };
+
+  const handleEditSubmit = (id) => {
+    handleEditing(id, editValues);
+  };
+  const handleChangePage = (event, newPage) => {
+    setCurrentPage(newPage);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = employees.slice(indexOfFirstItem, indexOfLastItem);
+  return (
+    <>
+      <div className="container mt-4">
+        <h1>Dummy Json</h1>
+        <div className="input-group mb-3">
+          <TemporaryDrawer handleAdding={handleAdding} />
+        </div>
+        <ul className="list-group">
+          {employees.map((user) => (
+            <li
+              key={user.id}
+              className="list-group-item d-flex justify-content-between align-items-center"
+            >
+              {editingId === user.id ? (
+                <div>
+                  <input
+                    type="text"
+                    name="name"
+                    value={editValues.name}
+                    onChange={handleEditChange}
+                    placeholder="Name"
+                  />
+                  <input
+                    type="text"
+                    name="username"
+                    value={editValues.username}
+                    onChange={handleEditChange}
+                    placeholder="Username"
+                  />
+                  <input
+                    type="email"
+                    name="email"
+                    value={editValues.email}
+                    onChange={handleEditChange}
+                    placeholder="Email"
+                  />
+                  <button
+                    className="btn btn-success btn-sm mr-2"
+                    onClick={() => handleEditSubmit(user.id)}
+                  >
+                    Save
+                  </button>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => setEditingId(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              ) : (
+                <div>
+                  <p>{user.name}</p>
+                  <p>{user.username}</p>
+                  <p>{user.email}</p>
+                  <div>
+                    <button
+                      className="btn btn-warning btn-sm mr-2"
+                      onClick={() => startEditing(user)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={() => handleDelete(user.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
+        <Stack spacing={2}>
+          <Pagination
+            count={Math.ceil(employees.length / itemsPerPage)}
+            color="secondary"
+            onChange={handleChangePage}
+          />
+        </Stack>
+      </div>
+    </>
+  );
+}
+
+export default DummyData;

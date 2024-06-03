@@ -1,0 +1,172 @@
+// 'use client'
+// import * as React from "react";
+// import Box from "@mui/material/Box";
+// import Drawer from "@mui/material/Drawer";
+// import Button from "@mui/material/Button";
+// import TextField from "@mui/material/TextField";
+// import { styled } from "@mui/material/styles";
+// import { Formik, useFormik } from 'formik';
+// import { entrySchema } from "./yup";
+// import DummyData from "../page";
+// import Dialog from '@mui/material/Dialog';
+// import DialogActions from '@mui/material/DialogActions';
+// import DialogContent from '@mui/material/DialogContent';
+// import DialogContentText from '@mui/material/DialogContentText';
+// import DialogTitle from '@mui/material/DialogTitle';
+
+// export default function TemporaryDrawer({
+//     handleAdding,
+//     // as prop recieve kiya
+// }) {
+//     const [open, setOpen] = React.useState(false);
+//     const [saves, setSaves] = React.useState(false);
+
+//     const toggleDrawer = (newOpen) => () => {
+//         setOpen(newOpen);
+//     };
+//     //SAVE BUTTON PROMPT
+//     const handleClickOpen = () => {
+//         setSaves(true);
+//     };
+
+//     const handleClose = () => {
+//         setSaves(false);
+//     };
+
+//     //FORMIK
+//     const initialValues = {
+//         name: "",
+//         username: "",
+//         email: "",
+//     };
+
+//     const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({
+//         initialValues: initialValues, //initial value get krenge
+//         validationSchema: entrySchema, // validation hoga
+//         onSubmit: (values) => {
+//             //console.log("these are the values", values
+//             //)
+//             handleAdding(values);
+//             //call krdiya
+//         }
+
+//     })
+
+
+//     const DrawerList = (
+//         <Box sx={{ width: 250 }} role="presentation">
+//             {handleAdding}
+//             <Box
+//                 component="form"
+//                 sx={{
+//                     "& > :not(style)": { m: 1, width: "25ch" },
+//                 }}
+//                 noValidate
+//                 autoComplete="off"
+//                 onSubmit={Formik.handleSubmit}
+//                 onClick={handleClickOpen}
+//             >
+//                 <StyledTextField
+//                     id="outlined-basic"
+//                     label="name"
+//                     variant="outlined"
+//                     value={values.name}
+//                     onChange={Formik.handleChange}
+//                     onBlur={Formik.handleBlur}
+//                     type="text"
+//                     name="name"
+//                 />
+//                 {Formik.touched.name && Formik.errors.name && <p className='form-error'>{Formik.errors.name}</p>}
+//                 <StyledTextField
+//                     id="outlined-basic"
+//                     label="username"
+//                     variant="outlined"
+//                     value={Formik.values.username}
+//                     onChange={Formik.handleChange}
+//                     onBlur={Formik.handleBlur}
+//                     type="text"
+//                     name="username"
+//                 />
+//                 {Formik.touched.username && Formik.errors.username && <p className='form-error'>{Formik.errors.username}</p>}
+//                 <StyledTextField
+//                     id="outlined-basic"
+//                     label="email"
+//                     variant="outlined"
+//                     value={values.email}
+//                     onChange={Formik.handleChange}
+//                     onBlur={Formik.handleBlur}
+//                     type="email"
+//                     name="email"
+//                 />
+//                 {Formik.touched.email && Formik.errors.email && <p className='form-error'>{Formik.errors.email}</p>}
+
+//                 {/* <Button type="submit">Submit</Button> */}
+//                 <Dialog
+//                     open={saves}
+//                     onClose={handleClose}
+//                     PaperProps={{
+//                         component: 'form',
+//                         onSubmit: (event) => {
+//                             event.preventDefault();
+//                             const formData = new FormData(event.currentTarget);
+//                             const formJson = Object.fromEntries(formData.entries());
+//                             const email = formJson.email;
+//                             console.log(email);
+//                             handleClose();
+//                         },
+//                     }}
+//                 >
+//                     <DialogTitle>Subscribe</DialogTitle>
+//                     <DialogContent>
+//                         <DialogContentText>
+//                             To subscribe to this website, please enter your email address here. We
+//                             will send updates occasionally.
+//                         </DialogContentText>
+//                         <TextField
+//                             autoFocus
+//                             required
+//                             margin="dense"
+//                             id="name"
+//                             name="email"
+//                             label="Email Address"
+//                             type="email"
+//                             fullWidth
+//                             variant="standard"
+//                         />
+//                     </DialogContent>
+//                     <DialogActions>
+//                         <Button onClick={handleClose}>Cancel</Button>
+//                         <Button type="submit">Save</Button>
+//                     </DialogActions>
+//                 </Dialog>
+//             </Box>
+//         </Box>
+//     );
+
+//     const handlebox = () => {
+
+
+//     }
+
+//     return (
+//         <div>
+//             <Button onClick={toggleDrawer(true)}>Add</Button>
+//             <Drawer open={open} onClose={toggleDrawer(false)}>
+//                 {DrawerList}
+//             </Drawer>
+//             <handleBox></handleBox>
+
+//         </div>
+//     );
+// }
+
+// const StyledTextField = styled(TextField)({
+//     "& input[type=number]::-webkit-outer-spin-button, & input[type=number]::-webkit-inner-spin-button":
+//     {
+//         "-webkit-appearance": "none",
+//         margin: 0,
+//     },
+//     "& input[type=number]": {
+//         "-moz-appearance": "textfield",
+//     },
+// });

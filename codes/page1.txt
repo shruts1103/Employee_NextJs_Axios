@@ -1,0 +1,108 @@
+'use client'
+
+import axios from "axios";
+import { useState, useEffect } from "react";
+
+export default function DummyData() {
+  const [todos, setTodos] = useState([]);
+  const [myError, setError] = useState("");
+  const [todoInput, setInput] = useState("");
+
+  //GET
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("https://dummyjson.com/todos");
+        setTodos(response.data.todos);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    fetchData();
+  }, []);
+
+  //DELETE
+  const handleDelete = async (id) => {
+    try {
+      axios.delete(`https://dummyjson.com/todos/${id}`);
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  //ADD-POST
+  const handleAdding = async () => {
+    //e.preventDefault();
+
+    try {
+      const entry = await axios.post("https://dummyjson.com/todos/add", {
+        todo: todoInput,
+        userId: 8,
+        completed: false,
+      });
+      // fetchData(response.data);
+      console.log(entry.data);
+      setTodos([...todos, entry.data]);
+      setInput("");
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+  return (
+    <form>
+      <div className="container mt-4">
+        <h1>Dummy Json</h1>
+
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Add todo"
+            value={todoInput}
+            onChange={(e) => setInput(e.target.value)}
+          />
+          <div className="input-group-append">
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={() => handleAdding(todoInput)}
+            >
+              Add
+            </button>
+          </div>
+          <br></br>
+        </div>
+        <ul className="list-group">
+          <li className="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+              {myError && <h2>{myError}</h2>}
+              <ul>
+                {todos.map((todo) => (
+                  <li
+                    key={todo.id}
+                    className="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    <p>{todo.todo}</p>
+                    <div>
+                      <button className="btn btn-warning btn-sm mr-2">
+                        Edit
+                      </button>
+                      <button
+                        className="btn btn-danger btn-sm"
+                        onClick={() => handleDelete(todo.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </form>
+  );
+}
+
