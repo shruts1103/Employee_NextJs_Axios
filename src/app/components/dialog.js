@@ -1,7 +1,7 @@
+//DIALOG.JS
 
 
-
-
+'use client'
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -39,8 +39,6 @@ export default function FormDialog({ handleAdding }) {
             setError(true);
         }
     };
-
-
 
     const handleInputChange = (event) => {
         setInputValue(event.target.value);

@@ -1,8 +1,11 @@
+
+
+// DRAWER.JS
+
 'use client'
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { styled } from "@mui/material/styles";
 import { useFormik } from "formik";
@@ -14,18 +17,9 @@ export default function TemporaryDrawer({
     handleEditing,
     editUser,
     setEditUser,
+    open,
+    setOpen
 }) {
-    const [open, setOpen] = React.useState(false);
-
-    const toggleDrawer = (mode) => () => {
-        setOpen(true);
-        if (mode === "edit") {
-            setEditUser(editUser);
-        } else {
-            setEditUser(null);
-        }
-        setOpen(true)
-    };
 
     // FORMIK
     const initialValues = {
@@ -103,23 +97,14 @@ export default function TemporaryDrawer({
                     <p className="form-error">{formik.errors.email}</p>
                 )}
                 <FormDialog handleAdding={handleFormDialogSubmit} />
-
-
-
-
             </Box>
         </Box>
     );
 
     return (
-        <div>
-            <Button variant="outlined" onClick={toggleDrawer(editUser ? "edit" : "add")}>
-                {editUser ? "Edit" : "Add"}
-            </Button>
-            <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
-                {DrawerList}
-            </Drawer>
-        </div>
+        <Drawer anchor="right" open={open} onClose={() => setOpen(false)}>
+            {DrawerList}
+        </Drawer>
     );
 }
 
